@@ -1,2 +1,8 @@
 # INFT-2202_2
-This repo is for the Web Development - Client Side Script course where we showcase all our assignments and other works in JS.
+## Web Development - Client Side Script
+
+This repository is dedicated to the **INFT-2202_2 Web Development - Client Side Script** course. It serves as a platform to showcase all our assignments and various works in JavaScript, HTML, and CSS.
+
+### Authors:
+- Kuldeep Mohanta
+- Ramiyan Gangatharan
