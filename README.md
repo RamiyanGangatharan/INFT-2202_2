@@ -6,5 +6,5 @@ This repository is dedicated to the **INFT-2202_2 Web Development - Client Side 
 ### Professor: Sergio Santilli
 
 ### Authors:
-- Kuldeep Mohanta
+- Joy Tejada
 - Ramiyan Gangatharan
