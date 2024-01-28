@@ -4,8 +4,8 @@
  * @date: January 27, 2024
  */
 
-
 "use strict";
+
 /**
  * Initializes the application, sets up the carousel, and loads initial projects.
  */
@@ -14,6 +14,13 @@ function Start()
     console.log("App Started!");
     initializeCarousel();
     loadProjects();
+
+    switch (document.title)
+    {
+        case "Team":
+            displayModal();
+            break;
+    }
 }
 
 // CAROUSEL
@@ -152,3 +159,37 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 window.addEventListener("load", Start);
+
+
+/**
+ * @author: Joy Tejada
+ * Student ID: 100883359
+ * @date: 2024-01-27
+ */
+
+// Teams Page: Modal
+// Get the modal
+function displayModal(){
+    let openRamiyan = document.getElementById("open-ramiyan");
+    let openJoy = document.getElementById("open-joy");
+    let modalRamiyan = document.getElementById('ramiyan-modal');
+    let modalJoy = document.getElementById("joy-modal");
+    let closeRamiyan = document.getElementById("closeRamiyan");
+    let closeJoy = document.getElementById("closeJoy");
+
+    openRamiyan.addEventListener("click", () => {
+        openRamiyan.modal("show");
+    });
+
+    openJoy.addEventListener("click", () => {
+        modalJoy.showModal();
+    });
+
+    closeRamiyan.addEventListener("click", () => {
+        modalRamiyan._hideModal();
+    });
+
+    closeJoy.addEventListener("click", () => {
+        modalJoy._hideModal();
+    });
+}
