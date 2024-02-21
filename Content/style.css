@@ -188,3 +188,26 @@ footer
 {
     transition: max-height 2s ease; /* Smooth transition for expanding and collapsing */
 }
+
+#events-container {
+    max-width: 1200px; /* Adjust to match your nav bar width */
+    margin: auto; /* Center the container */
+}
+
+#events-container .card {
+    width: 100%; /* Adjust width as needed */
+    height: 100%; /* Keep the height auto to maintain aspect ratio */
+}
+
+#events-container .card-img-top {
+    width: 100%; /* Make image responsive */
+    height: 100%; /* Maintain aspect ratio */
+    object-fit: cover; /* Crop to cover area */
+}
+
+/* Add media queries to handle responsiveness */
+@media (max-width: 768px) {
+    #events-container .col-md-4 {
+        max-width: 50%; /* Each event takes up half the container width on smaller screens */
+    }
+}

@@ -256,3 +256,44 @@ document.addEventListener('DOMContentLoaded', function() {
     loadHeader();
     loadFooter();
 });
+
+// EVENTS
+
+document.addEventListener('DOMContentLoaded', function() {
+    const eventsContainer = document.getElementById('events-container');
+
+    let events = [
+        {
+            title: 'Family Reunion',
+            description: 'An enchanting evening where family ties are celebrated under the twilight and festive lights.',
+            imageUrl: "../../Images/TablewithLights.jpg"
+        },
+        {
+            title: 'TED TALK: Johnathan Dover',
+            description: 'A thought-provoking session where Johnathan Dover explores groundbreaking ideas in his field.',
+            imageUrl: "../../Images/conference.webp"
+        },
+        {
+            title: 'Wedding Ceremony',
+            description: 'A beautiful and solemn ceremony marking the union of two hearts in a setting of elegance.',
+            imageUrl: "../../Images/wedding.jpeg"
+        }
+        // Add more events here as needed
+    ];
+
+    events.forEach(event => {
+        let eventElement = document.createElement('div');
+        eventElement.className = 'col-md-4 mb-4';
+        eventElement.innerHTML = `
+            <div class="card">
+                <img src="${event.imageUrl}" class="card-img-top" alt="${event.title}">
+                <div class="card-body">
+                    <h5 class="card-title">${event.title}</h5>
+                    <p class="card-text">${event.description}</p>
+                </div>
+            </div>
+        `;
+
+        eventsContainer.appendChild(eventElement);
+    });
+});
