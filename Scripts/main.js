@@ -258,7 +258,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // EVENTS
-
+    // WORKING CODE
 document.addEventListener('DOMContentLoaded', function() {
     const eventsContainer = document.getElementById('events-container');
 
@@ -281,7 +281,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // Add more events here as needed
     ];
 
-    events.forEach(event => {
+    events.forEach(event =>
+    {
         let eventElement = document.createElement('div');
         eventElement.className = 'col-md-4 mb-4';
         eventElement.innerHTML = `
@@ -295,5 +296,20 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
 
         eventsContainer.appendChild(eventElement);
+    });
+});
+
+// WIP BROKEN CODE
+$(document).ready(function()
+{
+    $.getJSON('./data/events.json', function(data)
+    {
+        let images = data.images;
+        let content = '';
+        $.each(images, function(index, image)
+        {
+            content += '<img src="' + image.src + '" alt="' + image.alt + '">';
+        });
+        $('.gallery').html(content);
     });
 });
