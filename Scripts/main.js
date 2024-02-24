@@ -12,7 +12,7 @@
 function Start() {
     console.log("App Started!");
     initializeCarousel();
-    loadProjects();
+    fetchFactOfTheDay();
 
     switch (document.title) {
         case "Team":
@@ -39,6 +39,10 @@ function initializeCarousel() {
      * Displays the slide and its corresponding description based on the current index.
      * @param {number} n - The number to add to the current index to determine the next slide to display.
      */
+
+    if (slides.length === 0 || descriptions.length === 0) {
+        return; // Exit the function if no slides or descriptions found
+    }
     function showSlide(n) {
         if (n >= slides.length) index = 0;
         if (n < 0) index = slides.length - 1;
@@ -258,58 +262,61 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // EVENTS
-    // WORKING CODE
 document.addEventListener('DOMContentLoaded', function() {
-    const eventsContainer = document.getElementById('events-container');
+    // Define the callback function to process the response
+    function processEventsData(responseText) {
+        const data = JSON.parse(responseText);
+        const events = data.events;
+        const eventsContainer = document.getElementById('events-container');
 
-    let events = [
-        {
-            title: 'Family Reunion',
-            description: 'An enchanting evening where family ties are celebrated under the twilight and festive lights.',
-            imageUrl: "../../Images/TablewithLights.jpg"
-        },
-        {
-            title: 'TED TALK: Johnathan Dover',
-            description: 'A thought-provoking session where Johnathan Dover explores groundbreaking ideas in his field.',
-            imageUrl: "../../Images/conference.webp"
-        },
-        {
-            title: 'Wedding Ceremony',
-            description: 'A beautiful and solemn ceremony marking the union of two hearts in a setting of elegance.',
-            imageUrl: "../../Images/wedding.jpeg"
-        }
-        // Add more events here as needed
-    ];
+        // Clear out any existing content in the events container
+        eventsContainer.innerHTML = '';
 
-    events.forEach(event =>
-    {
-        let eventElement = document.createElement('div');
-        eventElement.className = 'col-md-4 mb-4';
-        eventElement.innerHTML = `
-            <div class="card">
-                <img src="${event.imageUrl}" class="card-img-top" alt="${event.title}">
-                <div class="card-body">
-                    <h5 class="card-title">${event.title}</h5>
-                    <p class="card-text">${event.description}</p>
-                </div>
-            </div>
-        `;
+        // Iterate over each event and create the HTML structure
+        events.forEach(event => {
+            let eventElement = document.createElement('div');
+            eventElement.className = 'col-md-4 mb-4';
+            eventElement.innerHTML = `
+                <div class="card">
+                    <img src="${event.imageUrl}" class="card-img-top" alt="${event.title}">
+                    <div class="card-body">
+                        <h5 class="card-title">${event.title}</h5>
+                        <p class="card-text">${event.description}</p>
+                    </div>
+                </div> 
+            `;
 
-        eventsContainer.appendChild(eventElement);
-    });
-});
-
-// WIP BROKEN CODE
-$(document).ready(function()
-{
-    $.getJSON('./data/events.json', function(data)
-    {
-        let images = data.images;
-        let content = '';
-        $.each(images, function(index, image)
-        {
-            content += '<img src="' + image.src + '" alt="' + image.alt + '">';
+            // Append the newly created element to the 'events-container' div
+            eventsContainer.appendChild(eventElement);
         });
-        $('.gallery').html(content);
-    });
+    }
+
+    // Use the AJAX_REQUEST function to fetch the events.json file
+    AJAX_REQUEST('GET', '../../data/events.json', processEventsData);
 });
+
+function fetchFactOfTheDay() {
+    const limit = 1; // Since you only want a single fact
+    const apiKey = 'NhKexKzfF0TmdyXL/Jj/0Q==MMvyNrvqLLVQWkS2'; // It's best practice to keep API keys hidden, not in front-end code
+
+    $.ajax({
+        method: 'GET',
+        url: `https://api.api-ninjas.com/v1/facts?limit=${limit}`,
+        headers: { 'X-Api-Key': apiKey },
+        contentType: 'application/json',
+        success: function(result) {
+            // Log the result to debug
+            console.log(result);
+
+            // Check if result is an array and has at least one element with a 'fact' property
+            if (Array.isArray(result) && result.length > 0 && typeof result[0].fact === 'string') {
+                $('#fact-of-the-day').text(result[0].fact);
+            } else {
+                console.error('Unexpected result structure:', result);
+            }
+        },
+        error: function(jqXHR) {
+            console.error('Error fetching fact of the day:', jqXHR.responseText || 'Unknown error');
+        }
+    });
+}
