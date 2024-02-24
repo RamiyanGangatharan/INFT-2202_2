@@ -203,6 +203,13 @@ function displayModal() {
     });
 }
 
+/**
+ * Created by Ramiyan Gangatharan
+ * @param method
+ * @param url
+ * @param callback
+ * @constructor
+ */
 function AJAX_REQUEST(method, url, callback)
 {
     // Step 1:instantiate new XHR object
@@ -256,14 +263,20 @@ function loadFooter() {
         });
 }
 
+
 document.addEventListener('DOMContentLoaded', function() {
     loadHeader();
     loadFooter();
 });
 
 // EVENTS
+
 document.addEventListener('DOMContentLoaded', function() {
     // Define the callback function to process the response
+    /**
+     * This function grabs content from the JSON file
+     * @param responseText
+     */
     function processEventsData(responseText) {
         const data = JSON.parse(responseText);
         const events = data.events;
@@ -292,9 +305,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Use the AJAX_REQUEST function to fetch the events.json file
-    AJAX_REQUEST('GET', '../../data/events.json', processEventsData);
+    new AJAX_REQUEST('GET', '../../data/events.json', processEventsData);
 });
 
+/**
+ *
+ */
 function fetchFactOfTheDay() {
     const limit = 1; // Since you only want a single fact
     const apiKey = 'NhKexKzfF0TmdyXL/Jj/0Q==MMvyNrvqLLVQWkS2'; // It's best practice to keep API keys hidden, not in front-end code
@@ -315,6 +331,10 @@ function fetchFactOfTheDay() {
                 console.error('Unexpected result structure:', result);
             }
         },
+        /**
+         *
+         * @param jqXHR
+         */
         error: function(jqXHR) {
             console.error('Error fetching fact of the day:', jqXHR.responseText || 'Unknown error');
         }
