@@ -30,6 +30,7 @@ function Start() {
     loadFooter(); // Load the footer
 }
 
+
 window.addEventListener("load", Start);
 // CAROUSEL
 /**
@@ -242,13 +243,9 @@ function AJAX_REQUEST(method, url, callback)
 
     // Step 3: send XHR request
     xhr.send();
-
-
 }
 // Function to load the header
 function loadHeader() {
-    CheckLogin();
-
     fetch('/views/components/header.html') // Use root-relative path
         .then(response => response.text())
         .then(html => {
@@ -348,7 +345,6 @@ function fetchFactOfTheDay() {
         }
     });
 }
-
 /**
  * Checks if a user is logged in
  * @constructor
@@ -363,9 +359,9 @@ function CheckLogin(){
         // Writes the users name if they are logged in on the homepage
         for(const key of keys){
             if(key === "users"){
-            let userData = localStorage.getItem(key);
-            let usersName = userData.split(",")
-            $("#name").html(`<h1 id="name">Welcome ${usersName[0]} to The Harmony Hub</h1>`)
+                let userData = localStorage.getItem(key);
+                let usersName = userData.split(",")
+                $("#name").html(`<h1 id="name">Welcome ${usersName[0]} to The Harmony Hub</h1>`)
             }
         }
     }
@@ -586,7 +582,7 @@ function AjaxFeedback(){
     xhr.addEventListener("readystatechange", () => {
         if(xhr.readyState === 4 && xhr.status === 200){
             if(feedback !== null)
-            sessionStorage.setItem("feedback", feedback.value)
+                sessionStorage.setItem("feedback", feedback.value)
             location.href = "../../index.html";
         }
     });
