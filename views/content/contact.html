@@ -57,7 +57,19 @@ Description: This page is used to let the user submit a queries or feedback usin
                 <label class="form-check-label" for="subscribeCheckbox">Subscribe to our Contact List</label>
             </div>
             <!-- Button -->
-            <button id="sendButton" type="submit" class="btn btn-primary"><i class="fa-regular fa-envelope"></i> Submit</button>
+            <button id="sendButton" type="submit" class="btn btn-primary"> Submit</button>
+        </form>
+
+        <br><br>
+        <form class="con-lg-6 col-md-10 col-sm-10">
+            <div class="input-group mb-3">
+                <span class="input-group-text">Feedback</span>
+                <textarea id="feedback" name="feedback" type="text" class="form-control"
+                          aria-describedby="Feedback" aria-label="Feedback Input" required></textarea>
+            </div>
+
+            <!-- Button -->
+            <button id="feedbackBtn" onclick="AjaxFeedback()" class="btn btn-primary text-center btn-dark"> Submit</button>
         </form>
     </main>
 
