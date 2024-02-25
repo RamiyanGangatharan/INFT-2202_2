@@ -4,6 +4,7 @@
  * Description: For Login and Registration
  */
 
+
 "use strict";
 
 (function (core){
