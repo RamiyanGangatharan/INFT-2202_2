@@ -350,7 +350,7 @@ function fetchFactOfTheDay() {
 }
 
 /**
- *
+ * Checks if a user is logged in
  * @constructor
  */
 function CheckLogin(){
@@ -360,6 +360,7 @@ function CheckLogin(){
 
         let keys = Object.keys(localStorage);
 
+        // Writes the users name if they are logged in on the homepage
         for(const key of keys){
             if(key === "users"){
             let userData = localStorage.getItem(key);
@@ -378,6 +379,9 @@ function CheckLogin(){
     });
 }
 
+/**
+ * Regular expressions to help validate the register form
+ */
 function RegisterFormValidation(){
     // Call for First Name
     ValidateField("#firstName",
@@ -430,6 +434,11 @@ function ValidateField(input_field_id, regular_expression, error_message){
     });
 }
 
+/**
+ * The Register Page
+ * When the form is submitted after validation, will check if username already exists,
+ * and if the passwords are the same.
+ */
 function displayRegisterPage(){
     console.log("Called RegisterPage");
 
@@ -475,6 +484,11 @@ function displayRegisterPage(){
     });
 }
 
+/**
+ * Displays the login page
+ * Authentication if the users Login Credentials are accurate to the data stored
+ * Shows error messages if there is an error
+ */
 function displayLoginPage(){
     console.log("Called Displayed Login Page.");
 
@@ -562,6 +576,7 @@ function showSlides(n) {
     captionText.innerHTML = dots[slideIndex-1].alt;
 }
 
+// getting feedback asynchronously with Ajax
 function AjaxFeedback(){
     let xhr = new XMLHttpRequest();
     let feedback = document.getElementById("feedback")

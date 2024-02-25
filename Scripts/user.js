@@ -1,3 +1,9 @@
+/**
+ * @Author Joy Tejada
+ * @Date 2024-02-24
+ * Description: For Login and Registration
+ */
+
 "use strict";
 
 (function (core){
@@ -20,6 +26,7 @@
              Email Address: ${this.EmailAddress}\nUsername: ${this.Username}`;
         }
 
+        // Write to JSON
         toJSON(){
             return{
                 "FirstName" : this.FirstName,
@@ -32,6 +39,7 @@
             }
         }
 
+        // Read JSON
         fromJSON(data){
             this.FirstName = data.FirstName;
             this.LastName = data.LastName;
