@@ -15,7 +15,7 @@
     <header id="site-header"></header>
     <main class="container" id="mainContent">
         <div>
-            <div >
+            <div>
                 <div class="login" id="contentArea">
                     <h1 class="display-4">Login</h1>
                     <div id="messageArea"></div>
@@ -45,16 +45,22 @@
                             </div>
                         </div>
                         <div  style="margin-left: 70px" class="text-right">
-                            <button id="submitButton" type="submit" class="btn btn-primary btn-lg">Login</button>
+                            <button id="submitButton" type="button" class="btn btn-primary btn-lg">Login</button>
                             <button id="cancelButton" type="button" class="btn btn-warning">cancel</button>
                         </div>
                     </form>
+                    <p class="text-center text-muted small">
+                        <b style="color: white">Don't have an account?
+                            <a href="register.html" style="color: white">Register Here!</a></b>
+                    </p>
                 </div>
             </div>
         </div>
     </main>
 
     <footer id="site-footer"  style="text-align: center; color: white"></footer>
+    <script src="../../Scripts/namespace.js"></script>
+    <script src="../../Scripts/user.js"></script>
     <script src="../../Scripts/main.js"></script>
     <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
     <script src="../../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
