@@ -10,11 +10,12 @@
  * Initializes the application, sets up the carousel, and loads initial projects.
  */
 
-
 (function ():void
 {
     function Start(): void {
         console.log("App Started!");
+        loadHeader();
+        loadFooter();
         initializeCarousel();
         fetchFactOfTheDay();
 
@@ -29,22 +30,19 @@
                 displayLoginPage();
                 break;
         }
-
-        loadHeader(); // Load the header
-        loadFooter(); // Load the footer
     }
 
 
     window.addEventListener("load", Start);
-// CAROUSEL
+    // CAROUSEL
     /**
      * Initializes the carousel functionality, setting up the rotation of images and their corresponding descriptions.
      */
     function initializeCarousel():void {
         // Carousel
-        let index = 0;
-        const slides: NodeListOf<Element> = document.querySelectorAll(".carousel-images img");
-        const descriptions: NodeListOf<Element> = document.querySelectorAll(".carousel-descriptions .description");
+        let index: number = 0;
+        const slides: NodeListOf<HTMLElement> = document.querySelectorAll(".carousel-images img") as NodeListOf<HTMLElement>;
+        const descriptions: NodeListOf<HTMLElement> = document.querySelectorAll(".carousel-descriptions .description") as NodeListOf<HTMLElement>;
 
         /**
          * Displays the slide and its corresponding description based on the current index.
@@ -54,17 +52,27 @@
         if (slides.length === 0 || descriptions.length === 0) {
             return; // Exit the function if no slides or descriptions found
         }
-        function showSlide(n: number):void {
+        function showSlide(n: number): void {
             if (n >= slides.length) index = 0;
             if (n < 0) index = slides.length - 1;
 
             for (let i:number = 0; i < slides.length; i++) {
-                slides[i].style.display = "none";
-                descriptions[i].style.display = "none"; // Hide all descriptions
+                // Check if the element is an instance of HTMLElement before accessing style
+                if (slides[i] instanceof HTMLElement) {
+                    slides[i].style.display = "none";
+                }
+                if (descriptions[i] instanceof HTMLElement) {
+                    descriptions[i].style.display = "none"; // Hide all descriptions
+                }
             }
 
-            slides[index].style.display = "block"; // Show the current slide
-            descriptions[index].style.display = "block"; // Show the matching description
+            // Check if the current slide and description are instances of HTMLElement
+            if (slides[index] instanceof HTMLElement) {
+                slides[index].style.display = "block"; // Show the current slide
+            }
+            if (descriptions[index] instanceof HTMLElement) {
+                descriptions[index].style.display = "block"; // Show the matching description
+            }
         }
 
         /**
@@ -142,7 +150,7 @@
          * @returns {HTMLElement} The project card element.
          */
         function createProjectCard(project: { title: string; description: string; imageUrl: string; }): HTMLElement {
-            let card = document.createElement('div');
+            let card: HTMLDivElement = document.createElement('div');
             card.className = 'col-lg-4 col-md-6 mb-4';
             card.innerHTML = `
             <div class="card h-100">
@@ -162,15 +170,18 @@
          * If there are no more projects to load, disables the 'Load More' button.
          * @param {number} [numProjects=3] - The number of projects to load each time the function is called.
          */
-        function loadProjects(numProjects: number = 3):void {
+        function loadProjects(numProjects: number = 3): void {
             let projectsToLoad: { imageUrl: string; description: string; title: string }[] = projects.splice(0, numProjects);
-            projectsToLoad.forEach(project => {
+            projectsToLoad.forEach((project: { imageUrl: string; description: string; title: string }):void => {
                 projectsContainer.appendChild(createProjectCard(project));
             });
             if (projects.length === 0) {
-                loadMoreButton.disabled = true;
+                if (loadMoreButton instanceof HTMLButtonElement) {
+                    loadMoreButton.disabled = true;
+                }
             }
         }
+
 
         // Initial load of projects
         loadProjects();
@@ -192,30 +203,39 @@
 
 // Teams Page: Modal
 // Get the modal
-    function displayModal() {
-        let openRamiyan: HTMLElement | null = document.getElementById("open-ramiyan")!;
-        let openJoy: HTMLElement | null = document.getElementById("open-joy")!
-        let modalRamiyan: HTMLElement | null = document.getElementById('ramiyan-modal')!;
-        let modalJoy: HTMLElement | null = document.getElementById("joy-modal")!;
-        let closeRamiyan: HTMLElement | null = document.getElementById("closeRamiyan")!;
-        let closeJoy: HTMLElement | null = document.getElementById("closeJoy")!;
+    function displayModal():void {
+        const openRamiyan: HTMLElement | null = document.getElementById("open-ramiyan");
+        const openJoy: HTMLElement | null = document.getElementById("open-joy");
+        const modalRamiyan: HTMLElement | null = document.getElementById('ramiyan-modal');
+        const modalJoy: HTMLElement | null = document.getElementById("joy-modal");
+        const closeRamiyan: HTMLElement | null = document.getElementById("closeRamiyan");
+        const closeJoy: HTMLElement | null = document.getElementById("closeJoy");
 
-        openRamiyan.addEventListener("click", ():void => {
-            openRamiyan.modal("show");
-        });
+        if (openRamiyan instanceof HTMLElement) {
+            openRamiyan.addEventListener("click", ():void => {
+                modalRamiyan?.classList.add("show");
+            });
+        }
 
-        openJoy.addEventListener("click", ():void => {
-            modalJoy.showModal();
-        });
+        if (openJoy instanceof HTMLElement) {
+            openJoy.addEventListener("click", ():void => {
+                modalJoy?.classList.add("show");
+            });
+        }
 
-        closeRamiyan.addEventListener("click", ():void => {
-            modalRamiyan._hideModal();
-        });
+        if (closeRamiyan instanceof HTMLElement) {
+            closeRamiyan.addEventListener("click", ():void => {
+                modalRamiyan?.classList.remove("show");
+            });
+        }
 
-        closeJoy.addEventListener("click", ():void => {
-            modalJoy._hideModal();
-        });
+        if (closeJoy instanceof HTMLElement) {
+            closeJoy.addEventListener("click", ():void => {
+                modalJoy?.classList.remove("show");
+            });
+        }
     }
+
 
     /**
      * Created by Ramiyan Gangatharan
@@ -252,11 +272,17 @@
         xhr.send();
     }
 // Function to load the header
-    function loadHeader():void {
+    function loadHeader(): void {
         fetch('/views/components/header.html') // Use root-relative path
             .then(response => response.text())
             .then(html=> {
-                document.getElementById('site-header').innerHTML = html;
+                let headerElement: HTMLElement | null;
+                headerElement = document.getElementById('site-header');
+                if (headerElement !== null) {
+                    headerElement.innerHTML = html;
+                } else {
+                    console.warn('The header element was not found in the document.');
+                }
             })
             .catch(error => {
                 console.warn('Error loading the header:', error);
@@ -264,11 +290,17 @@
     }
 
 // Function to load the footer
-    function loadFooter() {
+    function loadFooter():void {
         fetch('/views/components/footer.html') // Use root-relative path
             .then(response => response.text())
             .then(html => {
-                document.getElementById('site-footer').innerHTML = html;
+                let footerElement: HTMLElement | null;
+                footerElement = document.getElementById('site-footer');
+                if (footerElement !== null) {
+                    footerElement.innerHTML = html;
+                } else {
+                    console.warn('The footer element was not found in the document.');
+                }
             })
             .catch(error => {
                 console.warn('Error loading the footer:', error);
@@ -291,63 +323,61 @@
          */
         function processEventsData(responseText: string):void {
             const data = JSON.parse(responseText);
-            const events = data.events;
-            const eventsContainer = document.getElementById('events-container');
+            const events = data.event;
+            const eventsContainer: HTMLElement | null = document.getElementById('events-container');
 
             // Clear out any existing content in the events container
-            eventsContainer.innerHTML = '';
+            if (eventsContainer) {
+                eventsContainer.innerHTML = '';
 
-            // Iterate over each event and create the HTML structure
-            events.forEach((event: { imageUrl: any; title: any; description: any; }):void => {
-                let eventElement = document.createElement('div');
-                eventElement.className = 'col-md-4 mb-4';
-                eventElement.innerHTML = `
-                <div class="card">
-                    <img src="${event.imageUrl}" class="card-img-top" alt="${event.title}">
-                    <div class="card-body">
-                        <h5 class="card-title">${event.title}</h5>
-                        <p class="card-text">${event.description}</p>
-                    </div>
-                </div> 
-            `;
-
-                // Append the newly created element to the 'events-container' div
-                eventsContainer.appendChild(eventElement);
-            });
+                events.forEach((event: { imageUrl: string; title: string; description: string; }): void => {
+                    let eventElement = document.createElement('div');
+                    eventElement.className = 'col-md-4 mb-4';
+                    eventElement.innerHTML = `
+            <div class="card">
+                <img src="${event.imageUrl}" class="card-img-top" alt="${event.title}">
+                <div class="card-body">
+                    <h5 class="card-title">${event.title}</h5>
+                    <p class="card-text">${event.description}</p>
+                </div>
+            </div>`;
+                    eventsContainer.appendChild(eventElement);
+                });
+            } else {
+                console.warn('The events container element was not found in the document.');
+            }
         }
 
         // Use the AJAX_REQUEST function to fetch the events.json file
-        new AJAX_REQUEST('GET', '../../data/events.json', processEventsData);
+        AJAX_REQUEST('GET', '../../data/events.json', processEventsData);
     });
 
-    /**
-     *
-     */
-    function fetchFactOfTheDay() {
-        const limit = 1; // Since you only want a single fact
-        const apiKey = 'NhKexKzfF0TmdyXL/Jj/0Q==MMvyNrvqLLVQWkS2'; // It's best practice to keep API keys hidden, not in front-end code
+    interface FactApiResponse {
+        fact: string;
+    }
+
+    function fetchFactOfTheDay(): void {
+        const limit:1 = 1;
+        const apiKey: string = 'NhKexKzfF0TmdyXL/Jj/0Q==MMvyNrvqLLVQWkS2'; // Reminder: It's best practice to keep API keys hidden, not in front-end code
 
         $.ajax({
             method: 'GET',
             url: `https://api.api-ninjas.com/v1/facts?limit=${limit}`,
             headers: { 'X-Api-Key': apiKey },
             contentType: 'application/json',
-            success: function(result: string | any[]):void {
-                // Log the result to debug
+            success: function(result: any[]): void { // Temporarily accept any[] until we verify the structure
                 console.log(result);
 
-                // Check if result is an array and has at least one element with a 'fact' property
-                if (Array.isArray(result) && result.length > 0 && typeof result[0].fact === 'string') {
-                    $('#fact-of-the-day').text(result[0].fact);
+                // Use a type assertion to tell TypeScript what structure we're expecting
+                const facts: FactApiResponse[] = result as FactApiResponse[];
+
+                if (facts.length > 0) {
+                    $('#fact-of-the-day').text(facts[0].fact);
                 } else {
                     console.error('Unexpected result structure:', result);
                 }
             },
-            /**
-             *
-             * @param jqXHR
-             */
-            error: function(jqXHR: { responseText: any; }):void {
+            error: function(jqXHR: { responseText: any; }): void {
                 console.error('Error fetching fact of the day:', jqXHR.responseText || 'Unknown error');
             }
         });
@@ -356,10 +386,10 @@
      * Checks if a user is logged in
      * @constructor
      */
-    function CheckLogin(){
+    function CheckLogin(): void {
         if(localStorage.length > 0){
             $("#login").html(`<a id="logout" class="nav-link" href="#">
-                    <i class="fas fa-sign-out-alt"></i> Logout</a>`);
+                <i class="fas fa-sign-out-alt"></i> Logout</a>`);
 
             let keys = Object.keys(localStorage);
 
@@ -367,20 +397,24 @@
             for(const key of keys){
                 if(key === "users"){
                     let userData = localStorage.getItem(key);
-                    let usersName = userData.split(",")
-                    $("#name").html(`<h1 id="name">Welcome ${usersName[0]} to The Harmony Hub</h1>`)
+                    // Check if userData is not null before proceeding
+                    if (userData !== null) {
+                        let usersName = userData.split(",");
+                        $("#name").html(`<h1 id="name">Welcome ${usersName[0]} to The Harmony Hub</h1>`);
+                    }
                 }
             }
         }
 
         $("#logout").on("click", function ():void{
-            // Preform Logout
+            // Perform Logout
             localStorage.clear();
 
             // Redirect to login.html page
             location.href = "login.html";
         });
     }
+
 
     /**
      * Regular expressions to help validate the register form
@@ -399,7 +433,7 @@
         // Call for Address
         // Taken from https://regex101.com/library/CtqxiP?filterFlavors=javascript&orderBy=MOST_RECENT&search=
         ValidateField("#address",
-            /^(?![ -.&,_'":?!/])(?!.*[- &_'":]$)(?!.*[-.#@&,:?!/]{2})[a-zA-Z0-9- .#@&,_'":.?!/]+$/,
+            /^(?![ -.&,_'":?!/])(?!.*[- &_'":]$)(?!.*[-.#@&,:?!/]{2})[a-zA-Z0-9- .#@&,_'":?!/]+$/,
             "Please enter a valid Address.")
 
         // Call for Phone Number
@@ -421,21 +455,22 @@
      * @param regular_expression
      * @param error_message
      */
-    const ValidateField = (input_field_id: string, regular_expression: RegExp, error_message: string):void =>{
+    const ValidateField = (input_field_id: string, regular_expression: RegExp, error_message: string): void => {
         let messageArea = $("#messageArea").hide();
 
-        $(input_field_id).on("blur", () =>{
-            let inputFieldText = $(this).val();
-            if(!regular_expression.test(inputFieldText)){
-                $(this).trigger("focus").trigger("select");
-
+        $(input_field_id).on("blur", function(event) {
+            // Use $(event.target) instead of $(this) for better type inference
+            let inputField = $(event.target);
+            let inputFieldText = inputField.val();
+            if (!regular_expression.test(<string>inputFieldText)) {
+                inputField.trigger("focus").trigger("select");
                 messageArea.addClass("alert alert-danger").text(error_message).show();
-            }else{
+            } else {
                 // Full name was successful
                 messageArea.removeAttr("class").hide();
             }
         });
-    }
+    };
 
     /**
      * The Register Page
@@ -447,39 +482,39 @@
 
         RegisterFormValidation();
 
-        $("#sendButton").on("click", function ():void{
-            let firstName:HTMLElement | null = document.getElementById("firstName");
-            let lastName:HTMLElement | null = document.getElementById("lastName");
-            let address:HTMLElement | null = document.getElementById("address");
-            let phoneNumber:HTMLElement | null = document.getElementById("phoneNumber");
-            let emailAddress:HTMLElement | null = document.getElementById("emailAddress");
-            let username:HTMLElement | null = document.getElementById("username");
-            let password:HTMLElement | null = document.getElementById("password");
-            let confirmPassword:HTMLElement | null = document.getElementById("confirmPassword");
+        $("#sendButton").on("click", function (): void {
+            // Typecast each element to HTMLInputElement to access the value property
+            let firstName = document.getElementById("firstName") as HTMLInputElement;
+            let lastName = document.getElementById("lastName") as HTMLInputElement;
+            let address = document.getElementById("address") as HTMLInputElement;
+            let phoneNumber = document.getElementById("phoneNumber") as HTMLInputElement;
+            let emailAddress = document.getElementById("emailAddress") as HTMLInputElement;
+            let username = document.getElementById("username") as HTMLInputElement;
+            let password = document.getElementById("password") as HTMLInputElement;
+            let confirmPassword = document.getElementById("confirmPassword") as HTMLInputElement;
 
             let success:boolean = true;
+            // Assuming newUser and core.User exist and are correctly implemented
             let newUser = new core.User();
             let messageArea = $("#messageArea").hide();
 
-            $.get("../../data/user.json", function(data: { users: any; }):void{
+            $.get("../../data/user.json", function(data: { users: any; }): void {
                 for(const user of data.users){
-                    // Check if username doesn't exist and if the passwords match
                     if(username.value === user.Username){
                         success = false;
-                        console.log("true");
                         break;
                     }
                 }
                 if(success && password.value === confirmPassword.value){
-                    newUser.toJSON(firstName, lastName, address, phoneNumber, emailAddress, username, password);
+                    // Assuming toJSON is correctly implemented and can handle HTMLInputElement types
+                    newUser.toJSON(firstName.value, lastName.value, address.value, phoneNumber.value, emailAddress.value, username.value, password.value);
 
-                    // Add user to session storage
+                    // Assuming serialize is correctly implemented
                     sessionStorage.setItem("users", newUser.serialize());
-                    messageArea.removeAttr("class").hide();
+                    messageArea.removeClass("alert alert-danger").hide();
 
                     location.href = "../../index.html";
                 }else{
-                    // username exists or passwords don't match
                     $("#username").trigger("focus").trigger("select");
                     messageArea.addClass("alert alert-danger").text("ERROR: Username Taken or Passwords do not match.").show();
                 }
@@ -497,53 +532,62 @@
 
         let messageArea = $("#messageArea").hide();
 
-        $("#submitButton").on("click", function(){
-            let username = document.getElementById("username");
-            let password = document.getElementById("password");
+        $("#submitButton").on("click", function() {
+            // Correctly cast elements to HTMLInputElement
+            let username = document.getElementById("username") as HTMLInputElement;
+            let password = document.getElementById("password") as HTMLInputElement;
 
+            // It's safe to assume newUser and core.User are properly defined elsewhere
             let success = false;
             let newUser = new core.User();
 
-            $.get("../../data/user.json", function(data: { users: any; }){
-                for(const user of data.users){
-                    // Check if the username and password
-                    if(username.value === user.Username && password.value === user.Password){
-                        newUser.fromJSON(user);
-                        success = true;
-                        break;
+            $.get("../../data/user.json", function(data: { users: any; }) {
+                // Check if the fetched users array is not empty and elements are not null
+                if (username && password) {
+                    for(const user of data.users) {
+                        // Now safely use the value property
+                        if(username.value === user.Username && password.value === user.Password) {
+                            newUser.fromJSON(user); // Assuming fromJSON is a method of newUser
+                            success = true;
+                            break;
+                        }
                     }
-                }
-                if(success){
-                    // Add user to session storage
-                    localStorage.setItem("users", newUser.serialize());
-                    messageArea.removeAttr("class").hide();
-
-                    // Redirect user to secure area of the site.
-                    location.href = "../../index.html";
-                }else{
-                    // They do not match
-                    $("#username").trigger("focus").trigger("select");
-                    messageArea.addClass("alert alert-danger").text("Error: Invalid Login Credentials").show();
+                    if(success) {
+                        // Assuming serialize is a method of newUser
+                        localStorage.setItem("users", newUser.serialize());
+                        messageArea.removeAttr("class").hide();
+                        location.href = "../../index.html";
+                    } else {
+                        $("#username").trigger("focus").trigger("select");
+                        messageArea.addClass("alert alert-danger").text("Error: Invalid Login Credentials").show();
+                    }
                 }
             });
         });
 
-        $("#cancelButton").on("click", function():void{
+        $("#cancelButton").on("click", function(): void {
             location.href = "../../index.html";
         });
     }
 
 // Gallery Model
-// Open the Modal
-    function openModal():void {
-        document.getElementById("myModal").style.display = "block";
+    function openModal(): void {
+        const modal = document.getElementById("myModal");
+        if (modal) { // Check if the modal is not null
+            modal.style.display = "block";
+        } else {
+            console.warn("Modal element not found");
+        }
     }
 
-// Close the Modal
-    function closeModal():void {
-        document.getElementById("myModal").style.display = "none";
+    function closeModal(): void {
+        const modal = document.getElementById("myModal");
+        if (modal) { // Check if the modal is not null
+            modal.style.display = "none";
+        } else {
+            console.warn("Modal element not found");
+        }
     }
-
     let slideIndex:number = 1;
     showSlides(slideIndex);
 
@@ -557,44 +601,50 @@
         showSlides(slideIndex = n);
     }
 
-    function showSlides(n: number):void {
-        let i: number;
-        let slides = document.getElementsByClassName("mySlides");
-        let dots = document.getElementsByClassName("demo");
-        let captionText = document.getElementById("caption");
-        if (n > slides.length) {
-            slideIndex = 1
+    function showSlides(n: number): void {
+        let slides: HTMLCollectionOf<HTMLElement> = document.getElementsByClassName("mySlides") as HTMLCollectionOf<HTMLElement>; // Cast to specific element type
+        let dots: HTMLCollectionOf<HTMLElement> = document.getElementsByClassName("demo") as HTMLCollectionOf<HTMLElement>; // Assuming dots can be treated as HTMLElements
+        let captionText: HTMLElement | null = document.getElementById("caption");
+
+        if (n > slides.length) slideIndex = 1;
+        if (n < 1) slideIndex = slides.length;
+
+        for (let i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none"; // Now TypeScript knows `style` exists
         }
-        if (n < 1) {
-            slideIndex = slides.length
-        }
-        for (i = 0; i < slides.length; i++) {
-            slides[i].style.display = "none";
-        }
-        for (i = 0; i < dots.length; i++) {
+        for (let i = 0; i < dots.length; i++) {
             dots[i].className = dots[i].className.replace(" active", "");
         }
-        slides[slideIndex-1].style.display = "block";
-        dots[slideIndex-1].className += " active";
-        captionText.innerHTML = dots[slideIndex-1].alt;
+
+        // Ensure slideIndex is within bounds to avoid accessing undefined elements
+        if (slideIndex - 1 < slides.length && slideIndex - 1 < dots.length) {
+            slides[slideIndex - 1].style.display = "block"; // Safe to access `style`
+            dots[slideIndex - 1].className += " active";
+            // Check if captionText is not null and dots are HTMLElements (for 'alt')
+            if (captionText !== null && dots[slideIndex - 1] instanceof HTMLElement) {
+                captionText.innerHTML = dots[slideIndex - 1].getAttribute('alt') || ""; // Use getAttribute for 'alt'
+            }
+        }
     }
 
+
 // getting feedback asynchronously with Ajax
-    function AjaxFeedback():void{
-        let xhr = new XMLHttpRequest();
-        let feedback = document.getElementById("feedback")
+    function AjaxFeedback(): void {
+        let xhr: XMLHttpRequest = new XMLHttpRequest();
+        // Assuming 'feedback' is a form input or textarea, cast it accordingly.
+        let feedback: HTMLInputElement | HTMLTextAreaElement | null = document.getElementById("feedback") as HTMLInputElement | HTMLTextAreaElement | null;
 
         xhr.open("GET", "../../views/content/contact.html", true);
 
-        xhr.addEventListener("readystatechange", () => {
-            if(xhr.readyState === 4 && xhr.status === 200){
-                if(feedback !== null)
-                    sessionStorage.setItem("feedback", feedback.value)
+        xhr.addEventListener("readystatechange", ():void => {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                // Check if 'feedback' is not null and has a 'value' property before using it.
+                if (feedback !== null) {
+                    sessionStorage.setItem("feedback", feedback.value);
+                }
                 location.href = "../../index.html";
             }
         });
         xhr.send();
     }
 })();
-
-export default User;
