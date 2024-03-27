@@ -5,16 +5,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Homepage</title>
-    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="node_modules/@fortawesome/fontawesome-free/css/all.css">
+    <title>Blog</title>
+    <link href="/node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/node_modules/@fortawesome/fontawesome-free/css/all.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="Content/style.css">
+    <link href="/Content/style.css" rel="stylesheet">
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
 <header id="site-header"></header>
 
-<main>
+<main class="flex-fill">
     <div class="welcome-text">
         <h1 id="name">Welcome to The Harmony Hub</h1>
         <p style="text-align: center">Discover, Learn, and Connect with Your Community</p>
@@ -23,11 +23,11 @@
     <div class="carousel-container">
         <div class="carousel">
             <div class="carousel-images">
-                <img src="Images/community-events-ideas.jpg" height="450" width="800" alt="Community Event">
-                <img src="Images/CVPRW2023_EventVision_group_picture.jpg" height="450" width="800" alt="Workshop">
-                <img src="Images/PWC_OFFICE.webp" height="450" width="800" alt="Group Activity">
-                <img src="Images/networking.jpg" height="450" width="800" alt="Networking">
-                <img src="Images/cup-team-photo-2023-2.png" height="450" width="800" alt="Campus">
+                <img alt="Community Event" height="450" src="Images/community-events-ideas.jpg" width="800">
+                <img alt="Workshop" height="450" src="Images/CVPRW2023_EventVision_group_picture.jpg" width="800">
+                <img alt="Group Activity" height="450" src="Images/PWC_OFFICE.webp" width="800">
+                <img alt="Networking" height="450" src="Images/networking.jpg" width="800">
+                <img alt="Campus" height="450" src="Images/cup-team-photo-2023-2.png" width="800">
             </div>
             <!-- Separate Container for Descriptions -->
             <div class="carousel-descriptions">
@@ -75,9 +75,9 @@
     </div>
 </main>
 
-<footer id="site-footer"  style="text-align: center; color: white"></footer>
+<footer id="site-footer" style="text-align: center; color: white" class="mt-auto"></footer>
 
-<script src="Scripts/main.ts"></script>
+<script src="Scripts/main.js"></script>
 <script src="node_modules/jquery/dist/jquery.min.js"></script>
 <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 </body>

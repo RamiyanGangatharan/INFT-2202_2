@@ -1,3 +1,21 @@
+:root {
+    --dark-bg-color: #333;
+    --primary-color: #007bff;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+body {
+    display: flex;
+    flex-direction: column;
+}
+.content {
+    flex: 1; /* Flexibly expands the content to push the footer down */
+}
+
+
 body
 {
     background-color: slategrey;
@@ -83,14 +101,28 @@ main p, main ul
     color: #0056b3;
 }
 
-footer
-{
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    text-align: center;
+footer {
+    background-color: var(--dark-bg-color);
     color: white;
+    padding: 20px;
+    text-align: center;
 }
+
+footer a {
+    color: inherit; /* Make sure links inherit the white color */
+    margin: 0 10px;
+    text-decoration: none;
+}
+
+/* Responsive footer layout */
+@media (max-width: 768px) {
+    footer div {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+    }
+}
+
 
 /* Carousel Specific Styles */
 .carousel
@@ -349,4 +381,41 @@ img.hover-shadow {
 
 #ul li a:hover:not(.header) {
     background-color: #eee;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--dark-bg-color); /* Use CSS Variables for colors */
+    padding: 0 25px;
+}
+
+.navbar-brand {
+    font-style: italic;
+    font-weight: bold;
+}
+
+/* Responsive navigation menu */
+@media (max-width: 768px) {
+    .navbar-collapse {
+        flex-direction: column;
+    }
+}
+
+header {
+    transition: height 0.3s ease; /* Smooth transition for header height */
+}
+
+/* Example media query for smaller screens */
+@media (max-width: 768px) {
+    header {
+        height: auto; /* Adjust based on content */
+    }
+    .navbar-collapse {
+        display: none; /* Initially hide the menu */
+    }
+    .navbar-collapse.show {
+        display: block; /* Show menu when toggled */
+    }
 }

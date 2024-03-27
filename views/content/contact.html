@@ -11,70 +11,71 @@ Description: This page is used to let the user submit a queries or feedback usin
 <head>
     <meta charset="UTF-8">
     <title>Contact</title>
-    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../node_modules/@fortawesome/fontawesome-free/css/all.css">
+    <link href="../../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../node_modules/@fortawesome/fontawesome-free/css/all.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../Content/style.css">
+    <link href="../../Content/style.css" rel="stylesheet">
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
 <!-- Header and Nav Bar -->
 <header id="site-header"></header>
 <!-- Main -->
-<main>
+<main class="flex-fill">
     <div id="Header_1">
         <h1>Contact Us</h1>
-        <div class = "row justify-content-lg-center g-3">
-        </div><br>
+        <div class="row justify-content-lg-center g-3">
+        </div>
+        <br>
     </div>
     <!-- Form -->
     <form class="con-lg-6 col-md-10 col-sm-10">
         <div class="input-group mb-3">
             <span class="input-group-text">Full Name</span>
-            <input id="fullname" name="fullname" type="text" class="form-control"
-                   aria-describedby="Full Name" aria-label="Full Name Input" required>
+            <input aria-describedby="Full Name" aria-label="Full Name Input" class="form-control" id="fullname"
+                   name="fullname" required type="text">
         </div>
 
         <div class="input-group mb-3">
             <span class="input-group-text">Email</span>
-            <input id="emailAddress" name="emailAddress" type="email" class="form-control"
-                   aria-describedby="Email Address" aria-label="Email Address Input" required>
+            <input aria-describedby="Email Address" aria-label="Email Address Input" class="form-control" id="emailAddress"
+                   name="emailAddress" required type="email">
         </div>
 
         <div class="input-group mb-3">
             <span class="input-group-text">Subject</span>
-            <input id="subject" name="subject" type="text" class="form-control"
-                   aria-describedby="Subject" aria-label="Subject Input" required>
+            <input aria-describedby="Subject" aria-label="Subject Input" class="form-control" id="subject"
+                   name="subject" required type="text">
         </div>
 
         <div class="input-group mb-3">
             <span class="input-group-text">Your Message</span>
-            <textarea id="message" name="message" type="text" class="form-control"
-                      aria-describedby="Message Area" aria-label="Message Area Input" required></textarea>
+            <textarea aria-describedby="Message Area" aria-label="Message Area Input" class="form-control" id="message"
+                      name="message" required type="text"></textarea>
         </div>
 
         <div class="mb-3 form-check">
-            <input id="subscribeCheckbox" name="subscribeCheckbox" type="checkbox" class="form-check-label">
+            <input class="form-check-label" id="subscribeCheckbox" name="subscribeCheckbox" type="checkbox">
             <label class="form-check-label" for="subscribeCheckbox">Subscribe to our Contact List</label>
         </div>
         <!-- Button -->
-        <button id="sendButton" type="submit" class="btn btn-primary"> Submit</button>
+        <button class="btn btn-primary" id="sendButton" type="submit"> Submit</button>
     </form>
 
     <br><br>
     <form class="con-lg-6 col-md-10 col-sm-10">
         <div class="input-group mb-3">
             <span class="input-group-text">Feedback</span>
-            <textarea id="feedback" name="feedback" type="text" class="form-control"
-                      aria-describedby="Feedback" aria-label="Feedback Input" required></textarea>
+            <textarea aria-describedby="Feedback" aria-label="Feedback Input" class="form-control" id="feedback"
+                      name="feedback" required type="text"></textarea>
         </div>
 
         <!-- Button -->
-        <button id="feedbackBtn" onclick="AjaxFeedback()" class="btn btn-primary text-center btn-dark"> Submit</button>
+        <button class="btn btn-primary text-center btn-dark" id="feedbackBtn" onclick="AjaxFeedback()"> Submit</button>
     </form>
 </main>
 
-<footer id="site-footer"  style="text-align: center; color: white"></footer>
-<script src="../../Scripts/main.ts"></script>
+<footer id="site-footer" style="text-align: center; color: white"></footer>
+<script src="../../Scripts/main.js"></script>
 <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
 <script src="../../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 </body>

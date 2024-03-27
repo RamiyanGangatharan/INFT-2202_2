@@ -5,20 +5,21 @@
 <head>
     <meta charset="UTF-8">
     <title>Fact of the Day!</title>
-    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../node_modules/@fortawesome/fontawesome-free/css/all.css">
+    <link href="../../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../node_modules/@fortawesome/fontawesome-free/css/all.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../Content/style.css">
+    <link href="../../Content/style.css" rel="stylesheet">
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
 <header id="site-header"></header>
-<h1>Fact of the Day</h1>
-<div class="col-md-6 mx-auto text-wrap overflow-auto">
-    <p><span id="fact-of-the-day"></span></p>
-</div>
-
-<footer id="site-footer"  style="text-align: center; color: white"></footer>
-<script src="../../Scripts/main.ts"></script>
+<main class="flex-fill">
+    <h1>Fact of the Day</h1>
+    <div class="col-md-6 mx-auto text-wrap overflow-auto">
+        <p><span id="fact-of-the-day"></span></p>
+    </div>
+</main>
+<footer id="site-footer" style="text-align: center; color: white"></footer>
+<script src="../../Scripts/main.js"></script>
 <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
 <script src="../../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 </body>

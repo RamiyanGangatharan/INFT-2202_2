@@ -4,100 +4,84 @@
  * @date: January 27, 2024
  */
 
-"use strict";
-
 /**
- * Initializes the application, sets up the carousel, and loads initial projects.
+ * Main application script containing multiple functionalities like initializing carousels,
+ * loading dynamic content, handling modals, validating forms, and more.
+ * @author: Various contributors including Ramiyan Gangatharan and Joy Tejada.
+ * Dates of contribution are marked at relevant sections.
  */
 
-(function ():void
-{
-    function Start(): void {
-        console.log("App Started!");
-        loadHeader();
-        loadFooter();
-        initializeCarousel();
-        fetchFactOfTheDay();
+"use strict";
 
+// Immediately Invoked Function Expression (IIFE) to avoid polluting the global namespace.
+(function (): void {
+    // Function to initialize the application
+    function Start(): void {
+        console.log("App Started!"); // Logs to console when the app starts
+        loadHeader(); // Loads the header content dynamically
+        loadFooter(); // Loads the footer content dynamically
+        initializeCarousel(); // Initializes the image carousel
+        fetchFactOfTheDay(); // Fetches a fact of the day from an external API
+
+        // Switch case to execute page-specific code based on the document's title
         switch (document.title) {
             case "Team":
-                displayModal();
+                displayModal(); // Displays modal for team page
                 break;
             case "Register":
-                displayRegisterPage();
+                displayRegisterPage(); // Handles register page display logic
                 break;
             case "Login":
-                displayLoginPage();
+                displayLoginPage(); // Handles login page display logic
                 break;
         }
     }
 
 
+// Event listener for the window's load event to ensure Start function is called when the DOM is fully loaded
     window.addEventListener("load", Start);
-    // CAROUSEL
-    /**
-     * Initializes the carousel functionality, setting up the rotation of images and their corresponding descriptions.
-     */
-    function initializeCarousel():void {
-        // Carousel
-        let index: number = 0;
+
+    // Initializes the carousel functionality on the page
+    function initializeCarousel(): void {
+        let index: number = 0; // Current slide index
+        // Selects all carousel images and descriptions using querySelectorAll
         const slides: NodeListOf<HTMLElement> = document.querySelectorAll(".carousel-images img") as NodeListOf<HTMLElement>;
         const descriptions: NodeListOf<HTMLElement> = document.querySelectorAll(".carousel-descriptions .description") as NodeListOf<HTMLElement>;
 
-        /**
-         * Displays the slide and its corresponding description based on the current index.
-         * @param {number} n - The number to add to the current index to determine the next slide to display.
-         */
-
+        // Exit function early if no slides or descriptions found
         if (slides.length === 0 || descriptions.length === 0) {
-            return; // Exit the function if no slides or descriptions found
+            return;
         }
+
+        // Displays the slide and its corresponding description based on the current index
         function showSlide(n: number): void {
+            // Looping logic for carousel
             if (n >= slides.length) index = 0;
             if (n < 0) index = slides.length - 1;
 
-            for (let i:number = 0; i < slides.length; i++) {
-                // Check if the element is an instance of HTMLElement before accessing style
-                if (slides[i] instanceof HTMLElement) {
-                    slides[i].style.display = "none";
-                }
-                if (descriptions[i] instanceof HTMLElement) {
-                    descriptions[i].style.display = "none"; // Hide all descriptions
-                }
+            // Hides all slides and descriptions
+            for (let i: number = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+                descriptions[i].style.display = "none";
             }
 
-            // Check if the current slide and description are instances of HTMLElement
-            if (slides[index] instanceof HTMLElement) {
-                slides[index].style.display = "block"; // Show the current slide
-            }
-            if (descriptions[index] instanceof HTMLElement) {
-                descriptions[index].style.display = "block"; // Show the matching description
-            }
+            // Shows the current slide and its description
+            slides[index].style.display = "block";
+            descriptions[index].style.display = "block";
         }
 
-        /**
-         * Advances the carousel to the next or previous slide.
-         * This function updates the current slide index and ensures the carousel displays the correct slide.
-         * If the end of the slide array is reached, it loops back to the beginning, and vice versa.
-         *
-         * @param {number} n - The number of slides to move. Positive to advance, negative to go back.
-         * @example
-         * // Advances to the next slide
-         * moveSlide(1);
-         *
-         * // Moves back to the previous slide
-         * moveSlide(-1);
-         */
-        function moveSlide(n: number):void {
+        // Advances the carousel to the next or previous slide
+        function moveSlide(n: number): void {
             showSlide(index += n);
         }
 
         showSlide(index); // Initialize the first slide
-        setInterval(():void => {
-            moveSlide(1);
-        }, 5000); // Change slides every 5 seconds
-    }
 
+        // Change slides every 5 seconds
+        setInterval((): void => {
+            moveSlide(1);
+        }, 5000);
+    }
 // PORTFOLIO
     /**
      * Event listener for DOMContentLoaded event to ensure that the DOM is fully loaded before initializing project-related functionalities.
@@ -271,9 +255,9 @@
         // Step 3: send XHR request
         xhr.send();
     }
-// Function to load the header
+    // Function to load the header dynamically
     function loadHeader(): void {
-        fetch('/views/components/header.html') // Use root-relative path
+        fetch('views/components/header.html') // Use root-relative path
             .then(response => response.text())
             .then(html=> {
                 let headerElement: HTMLElement | null;
@@ -289,7 +273,7 @@
             });
     }
 
-// Function to load the footer
+    // Function to load the footer dynamically
     function loadFooter():void {
         fetch('/views/components/footer.html') // Use root-relative path
             .then(response => response.text())
@@ -537,7 +521,6 @@
             let username = document.getElementById("username") as HTMLInputElement;
             let password = document.getElementById("password") as HTMLInputElement;
 
-            // It's safe to assume newUser and core.User are properly defined elsewhere
             let success = false;
             let newUser = new core.User();
 

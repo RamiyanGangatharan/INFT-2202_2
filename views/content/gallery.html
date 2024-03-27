@@ -8,40 +8,47 @@
 <head>
     <meta charset="UTF-8">
     <title>Gallery</title>
-    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../node_modules/@fortawesome/fontawesome-free/css/all.css">
+    <link href="../../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../node_modules/@fortawesome/fontawesome-free/css/all.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../Content/style.css">
+    <link href="../../Content/style.css" rel="stylesheet">
 </head>
 <header id="site-header"></header>
-<body>
+<body class="d-flex flex-column min-vh-100">
 <!--  Modal help from w3school.com  -->
-<main>
+<main class="flex-fill">
     <div id="Header_Blog">
         <h1>Gallery</h1>
     </div>
     <div class="row">
         <div class="column">
-            <img height="500" src="../../Images/kelly-sikkkema-unsplash.png" onclick="openModal();currentSlide(1)" class="hover-shadow">
-            <img height="500" src="../../Images/jason-goodman-unsplash.png" onclick="openModal();currentSlide(2)" class="hover-shadow">
-            <img height="500" src="../../Images/arif-riyanto-unsplash.png" onclick="openModal();currentSlide(3)" class="hover-shadow">
+            <img class="hover-shadow" height="500" onclick="openModal();currentSlide(1)"
+                 src="../../Images/kelly-sikkkema-unsplash.png">
+            <img class="hover-shadow" height="500" onclick="openModal();currentSlide(2)"
+                 src="../../Images/jason-goodman-unsplash.png">
+            <img class="hover-shadow" height="500" onclick="openModal();currentSlide(3)"
+                 src="../../Images/arif-riyanto-unsplash.png">
         </div>
     </div>
     <div class="row">
         <div class="column">
-            <img height="500" src="../../Images/annie-spratt-unsplash.png" onclick="openModal();currentSlide(4)" class="hover-shadow">
-            <img height="500" src="../../Images/annie-spratt-unsplash(1).png" onclick="openModal();currentSlide(5)" class="hover-shadow">
-            <img height="500" src="../../Images/amelie-mourichon-unsplash.png" onclick="openModal();currentSlide(6)" class="hover-shadow">
+            <img class="hover-shadow" height="500" onclick="openModal();currentSlide(4)"
+                 src="../../Images/annie-spratt-unsplash.png">
+            <img class="hover-shadow" height="500" onclick="openModal();currentSlide(5)"
+                 src="../../Images/annie-spratt-unsplash(1).png">
+            <img class="hover-shadow" height="500" onclick="openModal();currentSlide(6)"
+                 src="../../Images/amelie-mourichon-unsplash.png">
         </div>
     </div>
     <div class="row">
         <div>
-            <img height="500" src="../../Images/alex-kotliarskyi-unsplash.png" onclick="openModal();currentSlide(7)" class="hover-shadow">
+            <img class="hover-shadow" height="500" onclick="openModal();currentSlide(7)"
+                 src="../../Images/alex-kotliarskyi-unsplash.png">
         </div>
     </div>
 
     <!-- The Modal/Lightbox -->
-    <div id="myModal" class="modal">
+    <div class="modal" id="myModal">
         <span class="close cursor" onclick="closeModal()">&times;</span>
         <div class="modal-content">
 
@@ -81,9 +88,9 @@
     </div>
 </main>
 
-<footer id="site-footer"  style="text-align: center; color: white"></footer>
+<footer id="site-footer" style="text-align: center; color: white"></footer>
 
-<script src="../../Scripts/main.ts"></script>
+<script src="../../Scripts/main.js"></script>
 <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
 <script src="../../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 </body>
