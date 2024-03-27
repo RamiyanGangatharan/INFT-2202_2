@@ -13,6 +13,9 @@
 
 "use strict";
 
+import {Calendar, EventInput} from '@fullcalendar/core';
+import dayGridPlugin from '@fullcalendar/daygrid';
+
 // Immediately Invoked Function Expression (IIFE) to avoid polluting the global namespace.
 (function (): void {
     // Function to initialize the application
@@ -44,44 +47,53 @@
     // Initializes the carousel functionality on the page
     function initializeCarousel(): void {
         let index: number = 0; // Current slide index
-        // Selects all carousel images and descriptions using querySelectorAll
         const slides: NodeListOf<HTMLElement> = document.querySelectorAll(".carousel-images img") as NodeListOf<HTMLElement>;
         const descriptions: NodeListOf<HTMLElement> = document.querySelectorAll(".carousel-descriptions .description") as NodeListOf<HTMLElement>;
 
-        // Exit function early if no slides or descriptions found
         if (slides.length === 0 || descriptions.length === 0) {
+            console.error("Carousel slides or descriptions not found.");
             return;
         }
 
-        // Displays the slide and its corresponding description based on the current index
         function showSlide(n: number): void {
-            // Looping logic for carousel
-            if (n >= slides.length) index = 0;
-            if (n < 0) index = slides.length - 1;
-
-            // Hides all slides and descriptions
-            for (let i: number = 0; i < slides.length; i++) {
-                slides[i].style.display = "none";
-                descriptions[i].style.display = "none";
+            // Adjust index within the bounds
+            if (n >= slides.length) {
+                index = 0;
+            } else if (n < 0) {
+                index = slides.length - 1;
+            } else {
+                index = n;
             }
 
-            // Shows the current slide and its description
+            // Hide all slides and descriptions
+            slides.forEach((slide) => {
+                slide.style.display = "none";
+            });
+            descriptions.forEach((description) => {
+                description.style.display = "none";
+            });
+
+            // Show the current slide and its description
             slides[index].style.display = "block";
             descriptions[index].style.display = "block";
         }
 
-        // Advances the carousel to the next or previous slide
-        function moveSlide(n: number): void {
-            showSlide(index += n);
+        // Advances the carousel to the next slide
+        function nextSlide(): void {
+            showSlide(index + 1);
         }
 
-        showSlide(index); // Initialize the first slide
+        // Initialize the first slide
+        showSlide(index);
 
         // Change slides every 5 seconds
-        setInterval((): void => {
-            moveSlide(1);
+        setInterval(() => {
+            nextSlide();
         }, 5000);
     }
+
+    document.addEventListener('DOMContentLoaded', initializeCarousel);
+
 // PORTFOLIO
     /**
      * Event listener for DOMContentLoaded event to ensure that the DOM is fully loaded before initializing project-related functionalities.
@@ -256,22 +268,37 @@
         xhr.send();
     }
     // Function to load the header dynamically
-    function loadHeader(): void {
-        fetch('views/components/header.html') // Use root-relative path
-            .then(response => response.text())
-            .then(html=> {
-                let headerElement: HTMLElement | null;
-                headerElement = document.getElementById('site-header');
-                if (headerElement !== null) {
+    function loadHeader() {
+        let pathToHeader: string;
+
+        // Determine the path based on the current location
+        if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/') {
+            pathToHeader = 'views/components/header.html';
+        } else {
+            pathToHeader = '../views/components/header.html';
+        }
+
+        fetch(pathToHeader)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(html => {
+                const headerElement = document.getElementById('site-header');
+                if (headerElement) {
                     headerElement.innerHTML = html;
                 } else {
                     console.warn('The header element was not found in the document.');
                 }
             })
             .catch(error => {
-                console.warn('Error loading the header:', error);
+                console.error('Failed to load header: ', error);
             });
     }
+
+
 
     // Function to load the footer dynamically
     function loadFooter():void {
@@ -593,7 +620,7 @@
         if (n < 1) slideIndex = slides.length;
 
         for (let i = 0; i < slides.length; i++) {
-            slides[i].style.display = "none"; // Now TypeScript knows `style` exists
+            slides[i].style.display = "none";
         }
         for (let i = 0; i < dots.length; i++) {
             dots[i].className = dots[i].className.replace(" active", "");
@@ -614,20 +641,125 @@
 // getting feedback asynchronously with Ajax
     function AjaxFeedback(): void {
         let xhr: XMLHttpRequest = new XMLHttpRequest();
-        // Assuming 'feedback' is a form input or textarea, cast it accordingly.
         let feedback: HTMLInputElement | HTMLTextAreaElement | null = document.getElementById("feedback") as HTMLInputElement | HTMLTextAreaElement | null;
 
-        xhr.open("GET", "../../views/content/contact.html", true);
+        if (feedback) {
+            sessionStorage.setItem("feedback", feedback.value);
+        }
 
-        xhr.addEventListener("readystatechange", ():void => {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                // Check if 'feedback' is not null and has a 'value' property before using it.
-                if (feedback !== null) {
-                    sessionStorage.setItem("feedback", feedback.value);
-                }
+        xhr.open("GET", "../../views/content/contact.html", true);
+        xhr.onload = (): void => {
+            if (xhr.status === 200) {
                 location.href = "../../index.html";
+            } else {
+                // Handle error - maybe notify the user
             }
-        });
+        };
+        xhr.onerror = (): void => {
+            // Handle network error
+        };
         xhr.send();
     }
+
+    interface EventDetails {
+        name: string;
+        description: string;
+        date: string;
+    }
+
+    function addEventToCalendar(event: EventDetails): void {
+        const eventList: HTMLElement = document.getElementById('eventList')!;
+        const eventItem: HTMLLIElement = document.createElement('li');
+        eventItem.classList.add('list-group-item');
+        eventItem.textContent = `${event.name} - ${event.date}: ${event.description}`;
+        eventList.appendChild(eventItem);
+    }
+
+
+    document.getElementById('eventForm')!.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const eventName = document.getElementById('eventName') as HTMLInputElement;
+        const eventDescription = document.getElementById('eventDescription') as HTMLTextAreaElement;
+        const eventDate = document.getElementById('eventDate') as HTMLInputElement;
+
+        const event: EventDetails = {
+            name: eventName.value,
+            description: eventDescription.value,
+            date: eventDate.value
+        };
+
+        console.log("Adding event:", event);
+        addEventToCalendar(event);
+
+        eventName.value = '';
+        eventDescription.value = '';
+        eventDate.value = '';
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const calendarEl = document.getElementById('calendar');
+
+        if (calendarEl) {
+            const calendar = new Calendar(calendarEl, {
+                plugins: [dayGridPlugin], // Add the dayGrid plugin
+                initialView: 'dayGridMonth', // Display month view by default
+                events: fetchEventData // Pass a function reference to fetch event data
+            });
+
+            calendar.render(); // Render the calendar
+        }
+    });
+
+// Define the type for event data
+    interface EventData {
+        title: string;
+        start: string;
+        // Add more properties as needed
+    }
+
+// Function to fetch event data
+    function fetchEventData(fetchInfo: any, successCallback: (eventInputs: EventInput[]) => void, failureCallback: any) {
+        // Simulated data for demonstration
+        const eventData: EventData[] = [
+            {
+                title: 'Event 1',
+                start: '2024-04-01'
+            },
+            {
+                title: 'Event 2',
+                start: '2024-04-05'
+            }
+            // Add more events as needed
+        ];
+        successCallback(eventData);
+    }
+
+    $(function():void {
+        $('#eventForm').on('submit', function(e: JQuery.SubmitEvent<HTMLElement, undefined, HTMLElement, HTMLElement>):void {
+            e.preventDefault();
+            const eventName: string | number | string[] | undefined = $('#eventName').val();
+            const eventDescription: string | number | string[] | undefined = $('#eventDescription').val();
+            const eventDate: string | number | string[] | undefined = $('#eventDate').val();
+            let $table: JQuery<HTMLElement> = $('#eventsTable');
+            if ($table.length === 0) {
+                $table = $(
+                    '<table class="table" id="eventsTable">' +
+                    '   <thead>' +
+                    '       <tr>' +
+                    '           <th>Event Name</th>' +
+                    '           <th>Description</th>' +
+                    '           <th class="date-column">Date</th>' + // Add class here
+                    '       </tr>' +
+                    '   </thead>' +
+                    '   <tbody>' +
+                    '   </tbody>' +
+                    '</table>');
+                $('#eventTableContainer').append($table);
+            }
+            const $newRow = $('<tr><td>' + eventName + '</td><td>' + eventDescription + '</td><td class="date-column">' + eventDate + '</td></tr>');
+            $table.find('tbody').append($newRow);
+            $('#eventForm').trigger('reset');
+        });
+    });
 })();

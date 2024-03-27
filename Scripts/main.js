@@ -1,4 +1,10 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const core_1 = require("@fullcalendar/core");
+const daygrid_1 = __importDefault(require("@fullcalendar/daygrid"));
 (function () {
     function Start() {
         console.log("App Started!");
@@ -24,28 +30,37 @@
         const slides = document.querySelectorAll(".carousel-images img");
         const descriptions = document.querySelectorAll(".carousel-descriptions .description");
         if (slides.length === 0 || descriptions.length === 0) {
+            console.error("Carousel slides or descriptions not found.");
             return;
         }
         function showSlide(n) {
-            if (n >= slides.length)
+            if (n >= slides.length) {
                 index = 0;
-            if (n < 0)
-                index = slides.length - 1;
-            for (let i = 0; i < slides.length; i++) {
-                slides[i].style.display = "none";
-                descriptions[i].style.display = "none";
             }
+            else if (n < 0) {
+                index = slides.length - 1;
+            }
+            else {
+                index = n;
+            }
+            slides.forEach((slide) => {
+                slide.style.display = "none";
+            });
+            descriptions.forEach((description) => {
+                description.style.display = "none";
+            });
             slides[index].style.display = "block";
             descriptions[index].style.display = "block";
         }
-        function moveSlide(n) {
-            showSlide(index += n);
+        function nextSlide() {
+            showSlide(index + 1);
         }
         showSlide(index);
         setInterval(() => {
-            moveSlide(1);
+            nextSlide();
         }, 5000);
     }
+    document.addEventListener('DOMContentLoaded', initializeCarousel);
     document.addEventListener('DOMContentLoaded', function () {
         const projectsContainer = document.getElementById('projects-container');
         const loadMoreButton = document.getElementById('loadMore');
@@ -157,12 +172,23 @@
         xhr.send();
     }
     function loadHeader() {
-        fetch('/views/components/header.html')
-            .then(response => response.text())
+        let pathToHeader;
+        if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/') {
+            pathToHeader = 'views/components/header.html';
+        }
+        else {
+            pathToHeader = '../views/components/header.html';
+        }
+        fetch(pathToHeader)
+            .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.text();
+        })
             .then(html => {
-            let headerElement;
-            headerElement = document.getElementById('site-header');
-            if (headerElement !== null) {
+            const headerElement = document.getElementById('site-header');
+            if (headerElement) {
                 headerElement.innerHTML = html;
             }
             else {
@@ -170,7 +196,7 @@
             }
         })
             .catch(error => {
-            console.warn('Error loading the header:', error);
+            console.error('Failed to load header: ', error);
         });
     }
     function loadFooter() {
@@ -404,16 +430,93 @@
     function AjaxFeedback() {
         let xhr = new XMLHttpRequest();
         let feedback = document.getElementById("feedback");
+        if (feedback) {
+            sessionStorage.setItem("feedback", feedback.value);
+        }
         xhr.open("GET", "../../views/content/contact.html", true);
-        xhr.addEventListener("readystatechange", () => {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                if (feedback !== null) {
-                    sessionStorage.setItem("feedback", feedback.value);
-                }
+        xhr.onload = () => {
+            if (xhr.status === 200) {
                 location.href = "../../index.html";
             }
-        });
+            else {
+            }
+        };
+        xhr.onerror = () => {
+        };
         xhr.send();
     }
+    function addEventToCalendar(event) {
+        const eventList = document.getElementById('eventList');
+        const eventItem = document.createElement('li');
+        eventItem.classList.add('list-group-item');
+        eventItem.textContent = `${event.name} - ${event.date}: ${event.description}`;
+        eventList.appendChild(eventItem);
+    }
+    document.getElementById('eventForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const eventName = document.getElementById('eventName');
+        const eventDescription = document.getElementById('eventDescription');
+        const eventDate = document.getElementById('eventDate');
+        const event = {
+            name: eventName.value,
+            description: eventDescription.value,
+            date: eventDate.value
+        };
+        console.log("Adding event:", event);
+        addEventToCalendar(event);
+        eventName.value = '';
+        eventDescription.value = '';
+        eventDate.value = '';
+    });
+    document.addEventListener('DOMContentLoaded', function () {
+        const calendarEl = document.getElementById('calendar');
+        if (calendarEl) {
+            const calendar = new core_1.Calendar(calendarEl, {
+                plugins: [daygrid_1.default],
+                initialView: 'dayGridMonth',
+                events: fetchEventData
+            });
+            calendar.render();
+        }
+    });
+    function fetchEventData(fetchInfo, successCallback, failureCallback) {
+        const eventData = [
+            {
+                title: 'Event 1',
+                start: '2024-04-01'
+            },
+            {
+                title: 'Event 2',
+                start: '2024-04-05'
+            }
+        ];
+        successCallback(eventData);
+    }
+    $(function () {
+        $('#eventForm').on('submit', function (e) {
+            e.preventDefault();
+            const eventName = $('#eventName').val();
+            const eventDescription = $('#eventDescription').val();
+            const eventDate = $('#eventDate').val();
+            let $table = $('#eventsTable');
+            if ($table.length === 0) {
+                $table = $('<table class="table" id="eventsTable">' +
+                    '   <thead>' +
+                    '       <tr>' +
+                    '           <th>Event Name</th>' +
+                    '           <th>Description</th>' +
+                    '           <th class="date-column">Date</th>' +
+                    '       </tr>' +
+                    '   </thead>' +
+                    '   <tbody>' +
+                    '   </tbody>' +
+                    '</table>');
+                $('#eventTableContainer').append($table);
+            }
+            const $newRow = $('<tr><td>' + eventName + '</td><td>' + eventDescription + '</td><td class="date-column">' + eventDate + '</td></tr>');
+            $table.find('tbody').append($newRow);
+            $('#eventForm').trigger('reset');
+        });
+    });
 })();
 //# sourceMappingURL=main.js.map
