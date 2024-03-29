@@ -15,6 +15,7 @@
 
 import {Calendar, EventInput} from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
+import Chart from "chart.js";
 
 // Immediately Invoked Function Expression (IIFE) to avoid polluting the global namespace.
 (function (): void {
@@ -22,12 +23,13 @@ import dayGridPlugin from '@fullcalendar/daygrid';
     function Start(): void {
         console.log("App Started!"); // Logs to console when the app starts
         loadHeader(); // Loads the header content dynamically
+        loadContent(); // Loads the contents dynamically
         loadFooter(); // Loads the footer content dynamically
         initializeCarousel(); // Initializes the image carousel
         fetchFactOfTheDay(); // Fetches a fact of the day from an external API
 
         // Switch case to execute page-specific code based on the document's title
-        switch (document.title) {
+        /*switch (document.title) {
             case "Team":
                 displayModal(); // Displays modal for team page
                 break;
@@ -37,7 +39,10 @@ import dayGridPlugin from '@fullcalendar/daygrid';
             case "Login":
                 displayLoginPage(); // Handles login page display logic
                 break;
-        }
+            case "Statistics":
+                getStatistics();
+                break;
+        }*/
     }
 
 
@@ -267,6 +272,31 @@ import dayGridPlugin from '@fullcalendar/daygrid';
         // Step 3: send XHR request
         xhr.send();
     }
+
+    function ActiveLinkCallBack(){
+        switch(router.ActiveLink){
+            case "home": return;
+            case "blog": return;
+            case "contact": return;
+            case "event-planning": return;
+            case "fact": return;
+            case "gallery": return;
+            case "login": return displayLoginPage();
+            case "logout": return;
+            case "portfolio": return;
+            case "privacy": return;
+            case "register": return displayRegisterPage();
+            case "services": return;
+            case "statistics": return getStatistics();
+            case "team": return displayModal;
+            case "TOS": return;
+            case "404": return;
+            default:
+                console.error("ERROR: callback function does not exist " + router.ActiveLink);
+                return new Function();
+        }
+    }
+
     // Function to load the header dynamically
     function loadHeader() {
         let pathToHeader: string;
@@ -298,7 +328,16 @@ import dayGridPlugin from '@fullcalendar/daygrid';
             });
     }
 
+    function loadContent():void{
+        let page_name = router.ActiveLink;
+        let callback = ActiveLinkCallBack();
 
+        $.get(`./views/content/${page_name}.html`, function(html_data){
+            $("main").html(html_data);
+            CheckLogin();
+            callback();
+        )};
+    }
 
     // Function to load the footer dynamically
     function loadFooter():void {
@@ -412,9 +451,12 @@ import dayGridPlugin from '@fullcalendar/daygrid';
                     if (userData !== null) {
                         let usersName = userData.split(",");
                         $("#name").html(`<h1 id="name">Welcome ${usersName[0]} to The Harmony Hub</h1>`);
+                        $("#")
                     }
                 }
             }
+        }else{
+            location.href = "login.html";
         }
 
         $("#logout").on("click", function ():void{
@@ -509,7 +551,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
             let newUser = new core.User();
             let messageArea = $("#messageArea").hide();
 
-            $.get("../../data/user.json", function(data: { users: any; }): void {
+            $.get("../../data/users.json", function(data: { users: any; }): void {
                 for(const user of data.users){
                     if(username.value === user.Username){
                         success = false;
@@ -518,10 +560,10 @@ import dayGridPlugin from '@fullcalendar/daygrid';
                 }
                 if(success && password.value === confirmPassword.value){
                     // Assuming toJSON is correctly implemented and can handle HTMLInputElement types
-                    newUser.toJSON(firstName.value, lastName.value, address.value, phoneNumber.value, emailAddress.value, username.value, password.value);
+                    //newUser.toJSON(firstName.value, lastName.value, address.value, phoneNumber.value, emailAddress.value, username.value, password.value); //causes error in typescript
 
                     // Assuming serialize is correctly implemented
-                    sessionStorage.setItem("users", newUser.serialize());
+                    sessionStorage.setItem("users", newUser.serialize() as string);
                     messageArea.removeClass("alert alert-danger").hide();
 
                     location.href = "../../index.html";
@@ -551,7 +593,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
             let success = false;
             let newUser = new core.User();
 
-            $.get("../../data/user.json", function(data: { users: any; }) {
+            $.get("../../data/users.json", function(data: { users: any; }) {
                 // Check if the fetched users array is not empty and elements are not null
                 if (username && password) {
                     for(const user of data.users) {
@@ -564,7 +606,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
                     }
                     if(success) {
                         // Assuming serialize is a method of newUser
-                        localStorage.setItem("users", newUser.serialize());
+                        localStorage.setItem("users", newUser.serialize() as string);
                         messageArea.removeAttr("class").hide();
                         location.href = "../../index.html";
                     } else {
@@ -762,4 +804,37 @@ import dayGridPlugin from '@fullcalendar/daygrid';
             $('#eventForm').trigger('reset');
         });
     });
+
+    function getStatistics(responseText:string):void{
+
+        const data = JSON.parse(responseText);
+        const stats = data.statistics;
+        const pieChart: HTMLElement | null = document.getElementById('pie-chart');
+
+        // Clear out any existing content in the events container
+        if (pieChart) {
+            pieChart.innerHTML = '';
+
+            stats.forEach((stats: { category: string; percent: string; colour: string }): void => {
+                let chart = new Chart("pie-chart", {
+                    type: "pie",
+                    data: {
+                        labels: stats.category,
+                        datasets: [{
+                            backgroundColor: stats.colour,
+                            data: stats.percent
+                        }]
+                    }
+                });
+            });
+        }
+    }
 })();
+function loadHeader() {
+    throw new Error('Function not implemented.');
+}
+
+function AJAX_REQUEST(arg0: string, arg1: string, processEventsData: (responseText: string) => void) {
+    throw new Error('Function not implemented.');
+}
+

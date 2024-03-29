@@ -9,20 +9,10 @@ const daygrid_1 = __importDefault(require("@fullcalendar/daygrid"));
     function Start() {
         console.log("App Started!");
         loadHeader();
+        loadContent();
         loadFooter();
         initializeCarousel();
         fetchFactOfTheDay();
-        switch (document.title) {
-            case "Team":
-                displayModal();
-                break;
-            case "Register":
-                displayRegisterPage();
-                break;
-            case "Login":
-                displayLoginPage();
-                break;
-        }
     }
     window.addEventListener("load", Start);
     function initializeCarousel() {
@@ -199,6 +189,9 @@ const daygrid_1 = __importDefault(require("@fullcalendar/daygrid"));
             console.error('Failed to load header: ', error);
         });
     }
+    function loadContent() {
+        let page_name = router.ActiveLink;
+    }
     function loadFooter() {
         fetch('/views/components/footer.html')
             .then(response => response.text())
@@ -281,9 +274,13 @@ const daygrid_1 = __importDefault(require("@fullcalendar/daygrid"));
                     if (userData !== null) {
                         let usersName = userData.split(",");
                         $("#name").html(`<h1 id="name">Welcome ${usersName[0]} to The Harmony Hub</h1>`);
+                        $("#");
                     }
                 }
             }
+        }
+        else {
+            location.href = "login.html";
         }
         $("#logout").on("click", function () {
             localStorage.clear();
@@ -326,7 +323,7 @@ const daygrid_1 = __importDefault(require("@fullcalendar/daygrid"));
             let success = true;
             let newUser = new core.User();
             let messageArea = $("#messageArea").hide();
-            $.get("../../data/user.json", function (data) {
+            $.get("../../data/users.json", function (data) {
                 for (const user of data.users) {
                     if (username.value === user.Username) {
                         success = false;
@@ -334,7 +331,6 @@ const daygrid_1 = __importDefault(require("@fullcalendar/daygrid"));
                     }
                 }
                 if (success && password.value === confirmPassword.value) {
-                    newUser.toJSON(firstName.value, lastName.value, address.value, phoneNumber.value, emailAddress.value, username.value, password.value);
                     sessionStorage.setItem("users", newUser.serialize());
                     messageArea.removeClass("alert alert-danger").hide();
                     location.href = "../../index.html";
@@ -354,7 +350,7 @@ const daygrid_1 = __importDefault(require("@fullcalendar/daygrid"));
             let password = document.getElementById("password");
             let success = false;
             let newUser = new core.User();
-            $.get("../../data/user.json", function (data) {
+            $.get("../../data/users.json", function (data) {
                 if (username && password) {
                     for (const user of data.users) {
                         if (username.value === user.Username && password.value === user.Password) {
@@ -518,5 +514,12 @@ const daygrid_1 = __importDefault(require("@fullcalendar/daygrid"));
             $('#eventForm').trigger('reset');
         });
     });
+    function getStatistics() {
+        CheckLogin();
+        $.get("../../data/statistics.json", function (data) {
+            for (const stats of data.statistics) {
+            }
+        });
+    }
 })();
 //# sourceMappingURL=main.js.map
