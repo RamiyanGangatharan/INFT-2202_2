@@ -1,3 +1,5 @@
 "use strict";
 
-let core: any;
+namespace core{
+
+}
