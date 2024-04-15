@@ -19,7 +19,7 @@ let localStrategy = passportLocal.Strategy;
 
 const app = express();
 
-mongoose.connect(DBConfig.URI);
+mongoose.connect(DBConfig.URI).then(r => {});
 const db = mongoose.connection;
 
 db.on('error', function () {
@@ -40,7 +40,8 @@ app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, "../../client")));        // server static files from client directory
-app.use(express.static(path.join(__dirname, "../../node_modules")));  // serve static files from node_modules directory
+app.use(express.static(path.join(__dirname, "../../node_modules")));
+app.use(express.static(path.join(__dirname, "../../client")));
 
 app.use(session({
     secret: DBConfig.SessionSecret,

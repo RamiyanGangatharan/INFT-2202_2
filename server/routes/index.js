@@ -1,28 +1,23 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const contact_1 = __importDefault(require("../models/contact"));
-const passport_1 = __importDefault(require("passport"));
-const user_1 = __importDefault(require("../models/user"));
-const utility_1 = require("../utility");
-const router = express_1.default.Router();
+import express from 'express';
+import Contact from '../models/contact';
+import passport from "passport";
+import User from '../models/user';
+import { AuthGuard, UserDisplayName } from "../utility";
+const router = express.Router();
 router.get('/', function (req, res, next) {
-    res.render('index', { title: 'Home', page: 'home', displayName: (0, utility_1.UserDisplayName)(req) });
+    res.render('index', { title: 'Home', page: 'home', displayName: UserDisplayName(req) });
 });
 router.get('/home', function (req, res, next) {
-    res.render('index', { title: 'Home', page: 'home', displayName: (0, utility_1.UserDisplayName)(req) });
+    res.render('index', { title: 'Home', page: 'home', displayName: UserDisplayName(req) });
 });
 router.get('/about', function (req, res, next) {
-    res.render('index', { title: 'About Us', page: 'about', displayName: (0, utility_1.UserDisplayName)(req) });
+    res.render('index', { title: 'About Us', page: 'about', displayName: UserDisplayName(req) });
 });
 router.get('/products', function (req, res, next) {
-    res.render('index', { title: 'Products', page: 'products', displayName: (0, utility_1.UserDisplayName)(req) });
+    res.render('index', { title: 'Products', page: 'products', displayName: UserDisplayName(req) });
 });
 router.get('/services', function (req, res, next) {
-    res.render('index', { title: 'Service', page: 'services', displayName: (0, utility_1.UserDisplayName)(req) });
+    res.render('index', { title: 'Service', page: 'services', displayName: UserDisplayName(req) });
 });
 router.get('/login', function (req, res, next) {
     if (!req.user) {
@@ -30,7 +25,7 @@ router.get('/login', function (req, res, next) {
             title: 'Login',
             page: 'login',
             messages: req.flash('loginMessage'),
-            displayName: (0, utility_1.UserDisplayName)(req)
+            displayName: UserDisplayName(req)
         });
     }
     else {
@@ -43,7 +38,7 @@ router.get('/register', function (req, res, next) {
             title: 'Register',
             page: 'register',
             messages: req.flash('registerMessage'),
-            displayName: (0, utility_1.UserDisplayName)(req)
+            displayName: UserDisplayName(req)
         });
     }
     else {
@@ -51,12 +46,12 @@ router.get('/register', function (req, res, next) {
     }
 });
 router.post('/register', function (req, res, next) {
-    let newUser = new user_1.default({
+    let newUser = new User({
         username: req.body.username,
         EmailAddress: req.body.emailAddress,
         displayName: req.body.firstName + " " + req.body.lastname
     });
-    user_1.default.register(newUser, req.body.password, function (err) {
+    User.register(newUser, req.body.password, function (err) {
         if (err) {
             if (err.name == "UserExistsError") {
                 console.error("Error: User already exists!");
@@ -66,14 +61,14 @@ router.post('/register', function (req, res, next) {
                 req.flash("registerMessage", "Server Error");
                 res.redirect('/register');
             }
-            return passport_1.default.authenticate('local')(req, res, function () {
+            return passport.authenticate('local')(req, res, function () {
                 return res.redirect('/contact-list');
             });
         }
     });
 });
 router.post('/login', function (req, res, next) {
-    passport_1.default.authenticate('local', function (err, user, info) {
+    passport.authenticate('local', function (err, user, info) {
         if (err) {
             console.error(err);
             res.end();
@@ -102,21 +97,21 @@ router.get('/logout', function (req, res, next) {
         }
     });
 });
-router.get('/edit/:id', utility_1.AuthGuard, function (req, res, next) {
+router.get('/edit/:id', AuthGuard, function (req, res, next) {
     let id = req.params.id;
-    contact_1.default.findById(id).then(function (contactToEdit) {
+    Contact.findById(id).then(function (contactToEdit) {
         res.render('index', {
             title: 'Edit Contact', page: 'edit',
-            contact: contactToEdit, displayName: (0, utility_1.UserDisplayName)(req)
+            contact: contactToEdit, displayName: UserDisplayName(req)
         });
     }).catch(function (err) {
         console.error(err);
         res.end();
     });
 });
-router.get('/delete/:id', utility_1.AuthGuard, function (req, res, next) {
+router.get('/delete/:id', AuthGuard, function (req, res, next) {
     let id = req.params.id;
-    contact_1.default.deleteOne({ _id: id }).then(function () {
+    Contact.deleteOne({ _id: id }).then(function () {
         res.redirect('/contact-list');
     }).catch(function (err) {
         console.error(err);
@@ -124,49 +119,49 @@ router.get('/delete/:id', utility_1.AuthGuard, function (req, res, next) {
     });
 });
 router.get('/contact', function (req, res, next) {
-    res.render('index', { title: 'Contact Us', page: 'contact', displayName: (0, utility_1.UserDisplayName)(req) });
+    res.render('index', { title: 'Contact Us', page: 'contact', displayName: UserDisplayName(req) });
 });
 router.get('/add', function (req, res, next) {
-    res.render('index', { title: 'Add Contact', page: 'edit', contact: '', displayName: (0, utility_1.UserDisplayName)(req) });
+    res.render('index', { title: 'Add Contact', page: 'edit', contact: '', displayName: UserDisplayName(req) });
 });
 router.get('/contact-list', function (req, res, next) {
-    contact_1.default.find().then(function (data) {
+    Contact.find().then(function (data) {
         res.render('index', {
             title: 'Contact List', page: 'contact-list',
-            contacts: data, displayName: (0, utility_1.UserDisplayName)(req)
+            contacts: data, displayName: UserDisplayName(req)
         });
     }).catch(function (err) {
         console.error("Encountered an Error reading from the database " + err);
         res.end();
     });
 });
-router.post('/edit/:id', utility_1.AuthGuard, function (req, res, next) {
+router.post('/edit/:id', AuthGuard, function (req, res, next) {
     let id = req.params.id;
-    let updatedContact = new contact_1.default({
+    let updatedContact = new Contact({
         "_id": id,
         "FullName": req.body.fullName,
         "ContactNumber": req.body.contactNumber,
         "EmailAddress": req.body.emailAddress
     });
-    contact_1.default.updateOne({ _id: id }, updatedContact).then(function () {
+    Contact.updateOne({ _id: id }, updatedContact).then(function () {
         res.redirect('/contact-list');
     }).catch(function (err) {
         console.error(err);
         res.end();
     });
 });
-router.post('/add/', utility_1.AuthGuard, function (req, res, next) {
-    let newContact = new contact_1.default({
+router.post('/add/', AuthGuard, function (req, res, next) {
+    let newContact = new Contact({
         "FullName": req.body.fullName,
         "ContactNumber": req.body.contactNumber,
         "EmailAddress": req.body.emailAddress
     });
-    contact_1.default.create(newContact).then(function () {
+    Contact.create(newContact).then(function () {
         res.redirect('/contact-list');
     }).catch(function (err) {
         console.error(err);
         res.end();
     });
 });
-exports.default = router;
+export default router;
 //# sourceMappingURL=index.js.map
