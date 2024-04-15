@@ -1,6 +1,6 @@
 // Function to load the header dynamically
 export function loadHeader(): void {
-    fetch('/views/components/header.html') // Use root-relative path
+    fetch('server/views/components/header.html') // Use root-relative path
         .then(response => response.text())
         .then(html => {
             let headerElement: HTMLElement | null;
@@ -18,7 +18,7 @@ export function loadHeader(): void {
 
 // Function to load the footer dynamically
 export function loadFooter(): void {
-    fetch('/views/components/footer.html') // Use root-relative path
+    fetch('server/views/components/footer.html') // Use root-relative path
         .then(response => response.text())
         .then(html => {
             let footerElement: HTMLElement | null;

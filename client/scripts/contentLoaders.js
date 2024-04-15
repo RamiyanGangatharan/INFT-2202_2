@@ -1,8 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.fetchFactOfTheDay = exports.loadFooter = exports.loadHeader = void 0;
-function loadHeader() {
-    fetch('/views/components/header.html')
+export function loadHeader() {
+    fetch('server/views/components/header.html')
         .then(response => response.text())
         .then(html => {
         let headerElement;
@@ -18,9 +15,8 @@ function loadHeader() {
         console.warn('Error loading the header:', error);
     });
 }
-exports.loadHeader = loadHeader;
-function loadFooter() {
-    fetch('/views/components/footer.html')
+export function loadFooter() {
+    fetch('server/views/components/footer.html')
         .then(response => response.text())
         .then(html => {
         let footerElement;
@@ -36,8 +32,7 @@ function loadFooter() {
         console.warn('Error loading the footer:', error);
     });
 }
-exports.loadFooter = loadFooter;
-function fetchFactOfTheDay() {
+export function fetchFactOfTheDay() {
     const limit = 1;
     const apiKey = 'NhKexKzfF0TmdyXL/Jj/0Q==MMvyNrvqLLVQWkS2';
     $.ajax({
@@ -60,5 +55,4 @@ function fetchFactOfTheDay() {
         }
     });
 }
-exports.fetchFactOfTheDay = fetchFactOfTheDay;
 //# sourceMappingURL=contentLoaders.js.map

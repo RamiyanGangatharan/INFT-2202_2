@@ -1,4 +1,4 @@
-import {RegisterFormValidation} from "./formValidation";
+import {RegisterFormValidation} from "./formValidation.js";
 
 /**
  * Checks if a user is logged in

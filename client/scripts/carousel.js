@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.initializeCarousel = void 0;
-function initializeCarousel() {
+export function initializeCarousel() {
     let index = 0;
     const slides = document.querySelectorAll(".carousel-images img");
     const descriptions = document.querySelectorAll(".carousel-descriptions .description");
@@ -18,5 +15,4 @@ function initializeCarousel() {
         moveSlide(1);
     }, 5000);
 }
-exports.initializeCarousel = initializeCarousel;
 //# sourceMappingURL=carousel.js.map

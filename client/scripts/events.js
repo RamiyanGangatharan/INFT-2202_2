@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.fetchEventsData = exports.processEventsData = void 0;
-function processEventsData(responseText) {
+export function processEventsData(responseText) {
     const data = JSON.parse(responseText);
     const events = data.event;
     const eventsContainer = document.getElementById('events-container');
@@ -25,9 +22,7 @@ function processEventsData(responseText) {
         console.warn('The events container element was not found in the document.');
     }
 }
-exports.processEventsData = processEventsData;
-function fetchEventsData() {
+export function fetchEventsData() {
     AJAX_REQUEST('GET', '../../data/events.json', processEventsData);
 }
-exports.fetchEventsData = fetchEventsData;
 //# sourceMappingURL=events.js.map

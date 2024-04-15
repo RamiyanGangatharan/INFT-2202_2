@@ -1,8 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.displayLoginPage = exports.displayRegisterPage = exports.CheckLogin = void 0;
-const formValidation_1 = require("./formValidation");
-function CheckLogin() {
+import { RegisterFormValidation } from "./formValidation.js";
+export function CheckLogin() {
     if (localStorage.length > 0) {
         $("#login").html(`<a id="logout" class="nav-link" href="#">
                 <i class="fas fa-sign-out-alt"></i> Logout</a>`);
@@ -22,10 +19,9 @@ function CheckLogin() {
         location.href = "login.html";
     });
 }
-exports.CheckLogin = CheckLogin;
-function displayRegisterPage() {
+export function displayRegisterPage() {
     console.log("Called RegisterPage");
-    (0, formValidation_1.RegisterFormValidation)();
+    RegisterFormValidation();
     $("#sendButton").on("click", function () {
         let firstName = document.getElementById("firstName");
         let lastName = document.getElementById("lastName");
@@ -58,8 +54,7 @@ function displayRegisterPage() {
         });
     });
 }
-exports.displayRegisterPage = displayRegisterPage;
-function displayLoginPage() {
+export function displayLoginPage() {
     console.log("Called Displayed Login Page.");
     let messageArea = $("#messageArea").hide();
     $("#submitButton").on("click", function () {
@@ -92,5 +87,4 @@ function displayLoginPage() {
         location.href = "../../index.html";
     });
 }
-exports.displayLoginPage = displayLoginPage;
 //# sourceMappingURL=authenticator.js.map
