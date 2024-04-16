@@ -1,8 +1,7 @@
 {
-  "compilerOptions":
-  {
+  "compilerOptions": {
     "target": "ES2022",
-    "module": "commonjs",
+    "module": "ESNext",
     "sourceMap": true,
     "removeComments": true,
     "strict": true,
@@ -17,7 +16,9 @@
     "esModuleInterop": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "moduleResolution": "Node"
+    "moduleResolution": "node"
   },
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }
